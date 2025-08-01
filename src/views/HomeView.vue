@@ -5,12 +5,24 @@
       <div class="header">
         <h1 class="page-title">Тестовое задание</h1>
         <div class="search-sort">
-          <input 
-            type="text"
-            v-model="postStore.searchQuery" 
-            placeholder=" Поиск..." 
-            class="input search-input"
-          />
+          <div class="search-container">
+            <input 
+              type="text"
+              v-model="postStore.searchQuery" 
+              placeholder=" Поиск..." 
+              class="input search-input"
+              :class="{ 'searching': postStore.isSearching }"
+            />
+            <button
+              v-if="postStore.searchQuery"
+              class="btn btn-clear"
+              @click="resetSearch" 
+              title="Очистить поиск"
+            >
+              <span class="cross-line"></span>
+              <span class="cross-line"></span>
+            </button>
+          </div>
           <button 
             class="btn btn-secondary btn-small"
             @click="toggleSort"
@@ -59,6 +71,10 @@ const handleDelete = (id: number) => {
 const handleEdit = (id: number) => {
   router.push({ name: 'edit', params: { id } })
 }
+
+const resetSearch = () => {
+  postStore.searchQuery = ''
+}
 </script>
 
 <style scoped>
@@ -102,9 +118,54 @@ const handleEdit = (id: number) => {
   align-items: center;
 }
 
-.search-input {
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
   min-width: 250px;
 }
+
+.search-input {
+  min-width: 250px;
+  padding-right: 2.5rem;
+}
+
+.btn-clear {
+  position: absolute;
+  right: 0.5rem;
+  border: none;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: none;
+}
+.cross-line {
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background-color: var(--text-color);
+  border-radius: 1px;
+}
+
+.cross-line:first-child {
+  transform: rotate(45deg);
+}
+
+.cross-line:last-child {
+  transform: rotate(-45deg);
+}
+
+.btn-clear:hover {
+  background-color: var(--surface-hover);
+}
+
+.search-input.searching {
+  border-color: var(--primary-color);
+}
+
 
 .create-button-container {
   display: flex;
@@ -118,7 +179,6 @@ const handleEdit = (id: number) => {
   font-size: 1rem;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .content-card {
     padding: 1.5rem;
@@ -137,6 +197,10 @@ const handleEdit = (id: number) => {
   .search-sort {
     flex-direction: column;
     align-items: stretch;
+  }
+  
+  .search-container {
+    min-width: auto;
   }
   
   .search-input {

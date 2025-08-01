@@ -11,6 +11,7 @@
             v-bind="field" 
             :class="{ 'input': true, 'invalid': errors.length }" 
             placeholder="Введите заголовок..."
+            maxlength="12"
           />
           <small class="form-error" v-if="errors.length">{{ errors[0] }}</small>
           <small class="form-help">{{ field.value?.length || 0 }}/12</small>
@@ -26,6 +27,7 @@
             :class="{ 'textarea': true, 'invalid': errors.length }" 
             placeholder="Введите содержание..."
             rows="6"
+            maxlength="50"
           ></textarea>
           <small class="form-error" v-if="errors.length">{{ errors[0] }}</small>
           <small class="form-help">{{ field.value?.length || 0 }}/50</small>
@@ -62,8 +64,8 @@ const props = defineProps<PostFormProps>()
 const emit = defineEmits(['submit', 'cancel'])
 
 const schema = yup.object({
-  title: yup.string().required('Title is required').max(12, 'Title must be at most 12 characters'),
-  body: yup.string().required('Content is required').max(50, 'Content must be at most 50 characters')
+  title: yup.string().required('Некоректный заголовок').max(12, 'Заголовок не может быть больше 12 символов'),
+  body: yup.string().required('Некоректное содержание').max(50, 'Содержание не может быть больше 50 символов')
 })
 
 const onSubmit = (values: any) => {
@@ -73,6 +75,7 @@ const onSubmit = (values: any) => {
 
 <style scoped>
 .form-container {
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
